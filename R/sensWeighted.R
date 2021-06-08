@@ -72,7 +72,7 @@ get_return_vals <- function(vals, sens, spec, th, get_max=TRUE){
 }
 
 # Returns the solution for the problem:  max c*se + sp
-Jsens <- function(sens, spec, th=NULL, c=2.0, ...){
+SenJ <- function(sens, spec, th=NULL, c=2.0, ...){
   length_assertion(sens, spec, th)
 
   vals <- c*sens + spec
@@ -81,12 +81,12 @@ Jsens <- function(sens, spec, th=NULL, c=2.0, ...){
 }
 
 # Returns the solution for the problem: max c*se + sp s.t. se > sp
-Jsens2 <- function(sens, spec, th=NULL, c=1.0, ...){
+SenLin <- function(sens, spec, th=NULL, c=1.0, d=1.0, ...){
   length_assertion(sens, spec, th)
   df <- create_frame(sens, spec, th)
 
   vals <- sapply(as.data.frame(t(as.matrix(df))), my_fun <- function(x){
-    if(c*x[1] >= x[2]){
+    if(d*x[1] >= x[2]){
       return(c*x[1] + x[2])
     }
     return(0)
@@ -100,7 +100,7 @@ Jsens2 <- function(sens, spec, th=NULL, c=1.0, ...){
 # The function also optionally takes in foc1 and/or foc2, which correspond to the foci of an ellipse.
 # Essentially, the function calculates the radius of the smallest possible ellipse with given foci
 # so that it overlaps with the roc-curve
-Csens <- function(sens, spec, th=NULL, c=2.0, foc1=NULL, foc2=NULL, is.ellipse=FALSE, ...){
+SenCirc <- function(sens, spec, th=NULL, c=2.0, foc1=NULL, foc2=NULL, is.ellipse=FALSE, ...){
   length_assertion(sens, spec, th)
   df <- create_frame(sens, spec, th)
 
@@ -124,12 +124,12 @@ Csens <- function(sens, spec, th=NULL, c=2.0, foc1=NULL, foc2=NULL, is.ellipse=F
   return(to_return)
 }
 
-Csens2 <- function(sens, spec, th=NULL, c=2.0, foc1=NULL, foc2=NULL, is.ellipse=TRUE, ...){
-  return(Csens(sens, spec, th, c, foc1, foc2, is.ellipse))
+SenEll <- function(sens, spec, th=NULL, c=2.0, foc1=NULL, foc2=NULL, is.ellipse=TRUE, ...){
+  return(SenCirc(sens, spec, th, c, foc1, foc2, is.ellipse))
 }
 
 # Returns the solution for the problem: max sens*(spec + c)
-CPsens <- function(sens, spec, th=NULL, c=0.5, ...){
+SenConp <- function(sens, spec, th=NULL, c=0.5, ...){
   length_assertion(sens, spec, th)
   df <- create_frame(sens, spec, th)
 
@@ -143,15 +143,15 @@ CPsens <- function(sens, spec, th=NULL, c=0.5, ...){
 
 # Returns Youden's J index
 J <- function(sens, spec, th=NULL, c=1, ...){
-  return(Jsens(sens, spec, th, c))
+  return(SenJ(sens, spec, th, c))
 }
 
 C <- function(sens, spec, th=NULL, c=1, ...){
-  return(Csens(sens, spec, th, c))
+  return(SenCirc(sens, spec, th, c))
 }
 
 CP <- function(sens, spec, th=NULL, c=0, ...){
-  return(CPsens(sens, spec, th, c))
+  return(SenConp(sens, spec, th, c))
 }
 
 
