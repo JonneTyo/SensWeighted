@@ -14,15 +14,15 @@ unit_sens = X_unit_test(:, 2);
 unit_spec = X_unit_test(:, 3);
 
 results = [];
-[se, sp, t] = CPsens(unit_sens, unit_spec, X_unit_test(:, 1));
+[se, sp, t] = SenConp(unit_sens, unit_spec, X_unit_test(:, 1));
 results = [results; [se, sp, t]];
-[se, sp, t] = Csens(unit_sens, unit_spec, X_unit_test(:, 1));
+[se, sp, t] = SenCirc(unit_sens, unit_spec, X_unit_test(:, 1));
 results = [results; [se, sp, t]];
-[se, sp, t] = Csens2(unit_sens, unit_spec, X_unit_test(:, 1));
+[se, sp, t] = SenEll(unit_sens, unit_spec, X_unit_test(:, 1));
 results = [results; [se, sp, t]];
-[se, sp, t] = Jsens(unit_sens, unit_spec, X_unit_test(:, 1));
+[se, sp, t] = SenJ(unit_sens, unit_spec, X_unit_test(:, 1));
 results = [results; [se, sp, t]];
-[se, sp, t] = Jsens2(unit_sens, unit_spec, X_unit_test(:, 1));
+[se, sp, t] = SenLin(unit_sens, unit_spec, X_unit_test(:, 1));
 results = [results; [se, sp, t]](:, 1:2);
 
 abs(results - Y_unit_test) <= 1e-12

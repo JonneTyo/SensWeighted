@@ -21,14 +21,20 @@ t : scalar
     The threshold to achieve the optimal sensitivity-specificity pair.
 #}
 
-% Returns the solution for the problem: max c*sens + spec s.t. c*sens > spec
-function [se, sp, t] = Jsens2(sens, spec, th)
-  c = 1.0;
+% Returns the solution for the problem min 2*(1 - spec)^2 + (1 - sens)^2 + (c - sens)^2
+function [se, sp, t] = SenEll(sens, spec, th)
+  c = 2.0;
   
-  temp = c.*sens;
-  temp = (temp + spec).*(temp > spec);
-  [argval, argmax] = max(temp);
-  se = sens(argmax);
-  sp = spec(argmax);
-  t = th(argmax);
+  foc1 = [0, 1];
+   foc2 = [0, c];
+  temp = [sens, 1 - spec];
+  d = (eukl(foc1, temp)+ eukl(foc2, temp))./2;
+  [argval, argmin] = min(d);
+  se = sens(argmin);
+  sp = spec(argmin);
+   t = th(argmin);
+  endfunction
+  
+  function [d] = eukl(pnt1, pnt2)
+  d = sqrt((pnt1(1) - pnt2(:,2)).^2 + (pnt1(2)-pnt2(:,1)).^2);
   endfunction

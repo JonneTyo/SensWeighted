@@ -21,13 +21,19 @@ t : scalar
     The threshold to achieve the optimal sensitivity-specificity pair.
 #}
 
-% Returns the solution for the problem max c*sens + spec
-function [se, sp, t] = Jsens(sens, spec, th)
-  % Returns the solution for the problem:  max c*se + sp
-  c=2.0;
-  temp = sens.*c + spec;
-  [argval, argmax] = max(temp);
-  se = sens(argmax);
-  t =  th(argmax);
-  sp =  spec(argmax);
+% Returns the solution for the problem min sqrt((1 - spec)^2 + (c - sens)^2)
+function [se, sp, t] = SenCirc(sens, spec, th)
+  c = 2.0;
+  
+  foc = [0, c];
+  temp = [sens, 1 - spec];
+  d = eukl(foc, temp);
+  [argval, argmin] = min(d);
+  se = sens(argmin);
+  sp = spec(argmin);
+   t = th(argmin);
+endfunction
+
+function [d] = eukl(pnt1, pnt2)
+  d = sqrt((pnt1(1) - pnt2(:,2)).^2 + (pnt1(2)-pnt2(:,1)).^2);
 endfunction

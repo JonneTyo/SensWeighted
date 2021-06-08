@@ -1,4 +1,3 @@
-
 #{
 This library contains functions designed to choose the optimal threshold
 in binary classification favoring sensitivity.
@@ -22,13 +21,13 @@ t : scalar
     The threshold to achieve the optimal sensitivity-specificity pair.
 #}
 
-% Returns the solution for the problem max sens*(c + spec)
-function [se, sp, t] = CPsens(sens, spec, th)
-  c = 0.5;
-  
-  temp = sens.*(spec + 0.5);
+% Returns the solution for the problem max c*sens + spec
+function [se, sp, t] = SenJ(sens, spec, th)
+  % Returns the solution for the problem:  max c*se + sp
+  c=2.0;
+  temp = sens.*c + spec;
   [argval, argmax] = max(temp);
   se = sens(argmax);
-  sp = spec(argmax);
-  t = th(argmax);
-  endfunction
+  t =  th(argmax);
+  sp =  spec(argmax);
+endfunction
