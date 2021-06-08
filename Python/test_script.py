@@ -8,7 +8,7 @@ class TestSensWeight(unittest.TestCase):
         df = pd.read_csv('generated_sens_spec.csv', index_col=0)
         df_y = pd.read_csv('python_test_results.csv', index_col=0).sort_index()
 
-        methods = sorted(['Jsens', 'Jsens2', 'Csens', 'Csens2', 'CPsens'])
+        methods = sorted(['SenJ', 'SenLin', 'SenCirc', 'SenEll', 'SenConp'])
         results_df = pd.DataFrame(index=methods, columns=['sens', 'spec'])
         for method in methods:
             method_f = getattr(seasWeighted, method)

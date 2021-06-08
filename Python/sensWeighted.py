@@ -34,7 +34,7 @@ def assert_lengths(given_func):
 
 # Returns the solution for the problem:  max c*se + sp
 @assert_lengths
-def Jsens(sens, spec, th=None, c=2.0, **kwargs):
+def SenJ(sens, spec, th=None, c=2.0, **kwargs):
 
     th = list(range(len(sens))) if th is None else th
 
@@ -44,11 +44,11 @@ def Jsens(sens, spec, th=None, c=2.0, **kwargs):
 
 # Returns the solution for the problem: max c*se + sp s.t. se > sp
 @assert_lengths
-def Jsens2(sens, spec, th=None, c=1, **kwargs):
+def SenLin(sens, spec, th=None, c=1, d=1, **kwargs):
 
     th = list(range(len(sens))) if th is None else th
 
-    temp = [(c*i + j)*int(i > j) for (i, j) in zip(sens, spec)]
+    temp = [(c*i + j)*int(d*i > j) for (i, j) in zip(sens, spec)]
     temp = np.argmax(temp)
 
     return sens[temp], spec[temp], th[temp]
@@ -58,7 +58,7 @@ def Jsens2(sens, spec, th=None, c=1, **kwargs):
 # Essentially, the function calculates the radius of the smallest possible ellipse with given foci
 # so that it overlaps with the roc-curve
 @assert_lengths
-def Csens(sens, spec, th=None, c=2, foc1=None, foc2=None, ellipse=False, **kwargs):
+def SenCirc(sens, spec, th=None, c=2, foc1=None, foc2=None, ellipse=False, **kwargs):
 
     if foc1 is None and foc2 is None:
         foc1 = (0, c)
@@ -92,12 +92,12 @@ def Csens(sens, spec, th=None, c=2, foc1=None, foc2=None, ellipse=False, **kwarg
     return min_se, min_sp, min_id
 
 @assert_lengths
-def Csens2(sens, spec, th=None, c=2, foc1=None, foc2=None, **kwargs):
-    return Csens(sens, spec, th, c, foc1, foc2, True, **kwargs)
+def SenEll(sens, spec, th=None, c=2, foc1=None, foc2=None, **kwargs):
+    return SenCirc(sens, spec, th, c, foc1, foc2, True, **kwargs)
 
 # Returns the solution for the problem: max sens*(spec + c)
 @assert_lengths
-def CPsens(sens, spec, th=None, c=0.5, **kwargs):
+def SenConp(sens, spec, th=None, c=0.5, **kwargs):
 
     assert c >= 0, 'argument "c" must be greater than or equal to 0'
 
@@ -116,14 +116,14 @@ def CPsens(sens, spec, th=None, c=0.5, **kwargs):
 
 # Returns Youden's J index
 def J(sens, spec, th=None, **kwargs):
-    return Jsens(sens, spec, th, c=1)
+    return SenJ(sens, spec, th, c=1)
 
 
 def C(sens, spec, th=None, **kwargs):
-    return Csens(sens, spec, th, foc1=(0, 1))
+    return SenCirc(sens, spec, th, foc1=(0, 1))
 
 def CP(sens, spec, th=None, **kwargs):
-    return CPsens(sens, spec, th, c=0)
+    return SenConp(sens, spec, th, c=0)
 
 
 
